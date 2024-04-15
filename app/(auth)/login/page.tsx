@@ -2,8 +2,8 @@ import { ConnectWallet } from "@/components/auth";
 
 const LoginPage = () => {
   return (
-    <div>
-      LoginPage
+    <div className="flex items-center justify-center min-h-screen">
+
       <ConnectWallet />
     </div>
   );

@@ -1,17 +1,16 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const isWalletConnected = request.cookies.get("isWalletConnected");
+  const walletAddress = request.cookies.get("walletAddress");
 
   const publicPath = path === "/login" || path === "/register";
 
-  if (!publicPath && !isWalletConnected)
+  if (!publicPath && !walletAddress)
     return NextResponse.redirect(new URL("/login", request.url));
 
-  if (publicPath && isWalletConnected)
+  if (publicPath && walletAddress)
     return NextResponse.redirect(new URL("/", request.url));
 }
 
@@ -24,7 +23,6 @@ export const config = {
     "/search",
     "/create",
     "/messages",
-    "profile/:path*",
     "/notifications",
   ],
 };

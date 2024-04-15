@@ -3,6 +3,7 @@
 import React, { useContext } from "react";
 import { connectWallet } from "@/utils/apiFeature";
 import { Web3ModalContext } from "@/contexts/web3modal";
+import Cookies from "js-cookie";
 
 const ConnectWallet = () => {
   const { setConnectedAddress, setWeb3Modal } = useContext(Web3ModalContext);
@@ -12,11 +13,16 @@ const ConnectWallet = () => {
     if (address) {
       setConnectedAddress(address);
       setWeb3Modal(null);
+      Cookies.set("walletAddress", address);
       console.log("Connected to wallet: ", address);
     }
   };
 
-  return <button onClick={connect}>Connect to Wallet</button>;
+  return <button onClick={connect} className="flex mx-auto items-center px-10 py-3 bg-purple-700 text-2xl rounded-full text-white font-medium">
+    
+    Connect to Wallet
+    
+    </button>;
 };
 
 export default ConnectWallet;
