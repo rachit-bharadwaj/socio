@@ -11,21 +11,21 @@ const Info = () => {
     <section className="flex flex-col gap-5 p-3">
       <div className="flex flex-col items-center justify-center">
         <p className="text-3xl font-bold">{userDetails.userAddress}</p>
-        <p>Next JS Developer</p>
+        
         <p className="text-sm text-primary-300">
-          Ready to Learn and Contribute
+          {userDetails.bio}
         </p>
       </div>
 
       <div className="flex justify-between">
         <div className="flex gap-10">
           <button>
-            <p className="text-primary-100 font-bold">2451</p>
-            <p className="text-primary-300">Followers</p>
+            <p className="text-primary-100 text-xl font-bold">{userDetails.followers.length}</p>
+            <p className="text-primary-300 ">Followers</p>
           </button>
 
           <button>
-            <p className="text-primary-100 font-bold">2451</p>
+            <p className="text-primary-100 font-bold text-xl">{userDetails.following.length}</p>
             <p className="text-primary-300">Following</p>
           </button>
         </div>
