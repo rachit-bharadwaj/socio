@@ -1,6 +1,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+
+// icons
 import { HiOutlineChatBubbleBottomCenter } from "react-icons/hi2";
 
 const Header = () => {
@@ -26,13 +28,15 @@ const Header = () => {
         </Link>
       </div>
 
-      <Image
+      {/* <Image
         src="/images/mili-user.jpeg"
         alt="Profile Picture"
         width={100}
         height={100}
         className="h-24 w-24 rounded-full -mt-12"
-      />
+      /> */}
+
+      <Image src="/images/user-avatar.jpg" width={500} height={500} alt="user-avatar" className="w-20 h-20 object-cover rounded-full" />
     </header>
   );
 };

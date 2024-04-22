@@ -41,7 +41,7 @@ export const connectingToContract = async () => {
   try {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
+    const provider = new ethers.BrowserProvider.Web3Provider(connection);
     const signer = provider.getSigner();
     const contract = await fetchContract(signer);
 
@@ -54,4 +54,12 @@ export const connectingToContract = async () => {
 export const convertTime = (timestamp) => {
   const date = new Date(timestamp * 1000);
   return date.toLocaleString();
+};
+
+
+const addPostToBlockchain = async (text, image) => {
+  const contract = new web3.eth.Contract(userContractABI, userContractAddress);
+
+  // Call the addPost function in your smart contract
+  await contract.methods.addPost(text, image).send({ from: userAddress });
 };

@@ -1,4 +1,5 @@
-import { Post } from "@/types";
+import type { Post } from "@/types";
+
 import Image from "next/image";
 
 // icons

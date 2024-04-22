@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} bg-primary-600 text-primary-200`}>
+      <body className={`${roboto.className} bg-primary-600 text-primary-200 max-w-xl mx-auto`}>
         <Web3ModalProvider>
           <UserProvider>
 

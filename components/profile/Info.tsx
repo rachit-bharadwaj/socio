@@ -1,16 +1,30 @@
 "use client"
 
 import { UserContext } from "@/contexts/user";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+
+import Cookies from "js-cookie";
 
 const Info = () => {
 
-  const {userDetails} = useContext(UserContext);
+  useEffect(() => {
+    const fetchAddress = () => {
+      const address = Cookies.get("walletAddress");
+      setUserDetails({
+        ...userDetails,
+        userAddress: address,
+      });
+    };
+
+    fetchAddress();
+  }, []);
+
+  const {userDetails, setUserDetails} = useContext(UserContext);
 
   return (
     <section className="flex flex-col gap-5 p-3">
       <div className="flex flex-col items-center justify-center">
-        <p className="text-3xl font-bold">{userDetails.userAddress}</p>
+        <p className="text-3xl font-bold truncate max-w-xs">{userDetails.userAddress}</p>
         
         <p className="text-sm text-primary-300">
           {userDetails.bio}

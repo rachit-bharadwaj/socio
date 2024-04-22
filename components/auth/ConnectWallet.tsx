@@ -4,9 +4,15 @@ import React, { useContext } from "react";
 import { connectWallet } from "@/utils/apiFeature";
 import { Web3ModalContext } from "@/contexts/web3modal";
 import Cookies from "js-cookie";
+import { UserContext } from "@/contexts/user";
+import { useRouter } from "next/navigation";
+
 
 const ConnectWallet = () => {
   const { setConnectedAddress, setWeb3Modal } = useContext(Web3ModalContext);
+  const {userDetails, setUserDetails} = useContext(UserContext);
+
+  const router = useRouter()
 
   const connect = async () => {
     const address = await connectWallet();
@@ -14,6 +20,9 @@ const ConnectWallet = () => {
       setConnectedAddress(address);
       setWeb3Modal(null);
       Cookies.set("walletAddress", address);
+      setUserDetails({...userDetails, userAddress: address});
+      console.log(userDetails)
+      router.push("/")
       console.log("Connected to wallet: ", address);
     }
   };
