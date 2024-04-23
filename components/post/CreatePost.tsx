@@ -2,12 +2,17 @@
 import { useContext, useState } from "react";
 import Web3 from 'web3';
 import Image from "next/image";
-import { userContractABI, userContractAddress } from "@/constants";
+import ipfs from 'ipfs-http-client';
+import { create } from 'ipfs-http-client';
+import { postContractABI, postContractAddress, userContractAddress } from "@/constants";
 import { useRouter } from "next/navigation";
 import { UserContext } from "@/contexts/user";
 
-// Initialize Web3
+
+//  Initialize Web3 and IPFS
 const web3 = new Web3(window.ethereum);
+const ipfsClient = create();
+
 
 const CreatePost = () => {
 
@@ -40,17 +45,30 @@ const CreatePost = () => {
     }
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     try {
       console.log("Publishing post:", postData);
-
+  
+      // Upload image to IPFS
+      const imageBuffer = Buffer.from(postData.image.split(",")[1], 'base64');
+      const imageResult = await ipfsClient.add(imageBuffer);
+      const imageUrl = `https://ipfs.io/ipfs/${imageResult.path}`;
+  
+      // Connect to the contract
+      const contract = new web3.eth.Contract(postContractABI, postContractAddress);
+  
+      // Add post to blockchain
+      await contract.methods.addPost(postData.text, imageUrl).send({ from: userContractAddress });
+  
+      // Clear input fields after posting
+      setPostData({ userAddress: userDetails.address, text: "", image: "" });
+      console.log("Post added to blockchain:", postData);
       localStorage.setItem("post", JSON.stringify(postData));
-      router.push("/")
     } catch (error: any) {
       console.log(error)
     }
-    
   }
+  
 
   // Function to add post to blockchain
   // const addPostToBlockchain = async () => {

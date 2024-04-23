@@ -22,6 +22,7 @@ const ConnectWallet = () => {
       Cookies.set("walletAddress", address);
       setUserDetails({...userDetails, userAddress: address});
       console.log(userDetails)
+      console.log("Connected to wallet: ", address);
       router.push("/")
       console.log("Connected to wallet: ", address);
     }
