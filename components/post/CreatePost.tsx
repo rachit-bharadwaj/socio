@@ -1,24 +1,23 @@
 "use client"
+
 import { useContext, useState } from "react";
 import Web3 from 'web3';
 import Image from "next/image";
-import ipfs from 'ipfs-http-client';
 import { create } from 'ipfs-http-client';
 import { postContractABI, postContractAddress, userContractAddress } from "@/constants";
 import { useRouter } from "next/navigation";
 import { UserContext } from "@/contexts/user";
 
 
-//  Initialize Web3 and IPFS
-const web3 = new Web3(window.ethereum);
+//  Initialize IPFS client (replace with your IPFS node URL) and IPFS
+const ipfs = create({ url: '/ip4/127.0.0.1/tcp/5001' }); // Update with your IPFS node address
 const ipfsClient = create();
 
 
 const CreatePost = () => {
 
-  const router = useRouter()
-
-  const {userDetails} = useContext(UserContext)
+  const router = useRouter();
+  const { userDetails } = useContext(UserContext);
 
   const [postData, setPostData] = useState({
     userAddress: userDetails.address,
@@ -35,38 +34,26 @@ const CreatePost = () => {
   const handleImageChange = async (e: any) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onloadend = () => {
+    reader.onloadend = async () => {
       // Convert image to base64 string
-      setPostData({ ...postData, image: reader.result as string });
-      console.log("Image uploaded:", reader.result)
+      const imageBase64 = reader.result as string;
+      setPostData({ ...postData, image: imageBase64 });
     };
     if (file) {
       reader.readAsDataURL(file);
     }
   };
 
-  const handlePublish = async () => {
+  const handlePublish = () => {
     try {
       console.log("Publishing post:", postData);
-  
-      // Upload image to IPFS
-      const imageBuffer = Buffer.from(postData.image.split(",")[1], 'base64');
-      const imageResult = await ipfsClient.add(imageBuffer);
-      const imageUrl = `https://ipfs.io/ipfs/${imageResult.path}`;
-  
-      // Connect to the contract
-      const contract = new web3.eth.Contract(postContractABI, postContractAddress);
-  
-      // Add post to blockchain
-      await contract.methods.addPost(postData.text, imageUrl).send({ from: userContractAddress });
-  
-      // Clear input fields after posting
-      setPostData({ userAddress: userDetails.address, text: "", image: "" });
-      console.log("Post added to blockchain:", postData);
+
       localStorage.setItem("post", JSON.stringify(postData));
+      router.push("/")
     } catch (error: any) {
       console.log(error)
     }
+    
   }
   
 
@@ -134,4 +121,3 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
-
