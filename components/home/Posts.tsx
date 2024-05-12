@@ -1,38 +1,50 @@
-"use client"
+"use client";
 
 import { Post } from "@/templates/home";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Posts = () => {
+  const [posts, setPosts] = useState([
+    {
+      creatorImg: "",
+      creatorName: "",
+      timestamp: "",
+      caption: "",
+      images: [""],
+      likes: [""],
+      comments: [""],
+    },
+  ]);
 
-  const [localPosts, setLocalPosts] = useState({
-    text: "",
-    image: "",
-  })
-
-  useEffect(() => {
-    const posts = localStorage.getItem("post")
-    if (posts) {
-      setLocalPosts(JSON.parse(posts))
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get("/api/post");
+      console.log(response)
+      setPosts(response.data.posts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
     }
-  }, [])
+  };
+  useEffect(() => {
 
+    fetchPosts();
+  }, []);
 
   return (
     <section className="p-3 flex flex-col gap-10">
-
-      {localPosts &&
+      {posts.map((post, index) => (
         <Post
+          key={index}
           creatorImg="/images/user.jpg"
           creatorName="Rachit Bharadwaj"
-          timestamp="just now"
-          text={localPosts.text}
-          image={[
-            localPosts.image
-          ]}
-
+          timestamp={post.timestamp}
+          text={post.caption}
+          image={post.images}
+          likes={post.likes}
+          comments={post.comments}
         />
-      }
+      ))}
 
       <Post
         creatorImg="/images/user.jpg"
