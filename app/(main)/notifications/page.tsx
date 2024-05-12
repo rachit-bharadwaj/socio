@@ -1,5 +1,9 @@
+import Notifications from "@/components/notification/Notifications";
+
 const NotificationsPage = () => {
-  return <div>NotificationsPage</div>;
+  return <div>
+    <Notifications />
+  </div>;
 };
 
 export default NotificationsPage;
