@@ -20,6 +20,7 @@ export type Post = {
   image?: Array<string>;
   likes?: Array<string>;
   comments?: Array<string>;
+  _id?: string;
 };
 
 export type Comment = {

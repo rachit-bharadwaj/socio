@@ -43,3 +43,34 @@ export const GET = async () => {
     throw new Error(error.message);
   }
 };
+
+export const PUT = async (request: NextRequest) => {
+  try {
+    await connectDB();
+
+    const reqBody = await request.json();
+
+    const { id, likes } = reqBody;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return NextResponse.json({
+        status: 404,
+        message: "Post not found!",
+      });
+    }
+
+    post.likes = likes;
+
+    await post.save();
+
+    return NextResponse.json({
+      status: 200,
+      message: "Likes updated!",
+      post,
+    });
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+}
