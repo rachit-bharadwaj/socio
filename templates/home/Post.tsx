@@ -1,3 +1,5 @@
+"use client";
+
 import type { Post } from "@/types";
 
 import Image from "next/image";
@@ -16,6 +18,11 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
+import { useEffect, useState } from "react";
+
+// axios
+import axios from "axios";
+
 const Post = ({
   comments,
   creatorImg,
@@ -24,7 +31,36 @@ const Post = ({
   likes,
   text,
   timestamp,
+  _id,
 }: Post) => {
+  const [liked, setLiked] = useState(false);
+  var likesCount = likes?.length ?? 0;
+
+  const handleLike = async () =>{
+    setLiked(!liked);
+    {
+      liked ? likesCount-- : likesCount++;
+    }
+    
+
+    // update it into the db
+    try {
+      const response = await axios.put("/api/post", {
+        _id: _id,
+        likes: likesCount,
+      });
+      console.log(_id);
+      console.log(response);
+    } catch (error) {
+      console.error("Error updating likes:", error);
+    }
+  };
+
+  useEffect(() => {
+   
+  }, [likesCount])
+  
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -69,16 +105,16 @@ const Post = ({
 
       <div className="flex justify-between items-center">
         <div className="flex gap-7 items-center">
-          <button className="flex items-center gap-1">
-            <RiHeart3Line className="text-xl hover:fill-red-200" />
-            <p>{likes?.length}</p>
+          <button className="flex items-center gap-1" onClick={handleLike}>
+            <RiHeart3Line
+              className={`text-xl ${
+                !liked ? `hover:fill-red-200` : `bg-red-200 rounded-full`
+              }`}
+            />
+            <p>{likesCount}</p>
           </button>
 
-          <button className="flex items-center gap-1">
-            <FaRegCommentDots className="text-xl hover:fill-yellow-500" />
-            {comments?.length}
-          </button>
-
+         
           <button>
             <TbShare3 className="text-xl hover:text-indigo-500" />
           </button>
@@ -88,6 +124,7 @@ const Post = ({
           <HiOutlineBookmark className="text-xl hover:text-green-200" />
         </button>
       </div>
+
     </div>
   );
 };
